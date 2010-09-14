@@ -1,0 +1,31 @@
+=========================================
+=               SETUP			=
+=========================================
+
+Server:
+
+1) run WebFuzzServer.jar
+2) select port to listen on (default: 9991)
+3) Select directory to output results to
+
+Applet:
+
+#BROKEN!!
+Method 1:
+1) install WAMP
+2) place included 'index.html' and WebFuzzerApplet.jar into the web server directory
+3) browse to http://localhost/index.html
+4) verify configurations are set to:
+host: 127.0.0.1
+port: <whatever you set the server to>
+
+
+# Currently the applet is broken with newest version of the server. This is the workaround to get it to work
+Method 2:
+1) go into the WebFuzzer directory
+2) import the src into Eclipse
+3) run applet.WebFuzzerAppletMain.java
+4) verify configurations are set to:
+Host: 127.0.0.1
+Port: <whatever you set the server to>
+
