@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.naming.ConfigurationException;
 import applet.FuzzRequestBean;
+import com.crawljax.browser.EmbeddedBrowser.BrowserType; 
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
@@ -75,6 +76,7 @@ public class CrawlerThread implements Runnable{
 		}
 		//Dont exercise any logout buttons
 		crawlerSpec.dontClick("a").withText("Logout");
+		//TODO: blacklist/whitelist. Same Origin
 		
 		//Only set depth if user does so. If none supplied, it will go for a loooong time.
 		if(request.getDepth() != 0){
@@ -94,9 +96,19 @@ public class CrawlerThread implements Runnable{
 			input.field(request.getPassField()).setValue(request.getPassword());
 			crawlerSpec.setInputSpecification(input);
 		}
+		
+		
+		//Sets the browser to use
+		
+		if(request.getBrowser().equals("IE")){
+			crawlerConfig.setBrowser(BrowserType.ie);
+		}else if(request.getBrowser().equals("Chrome")){
+			crawlerConfig.setBrowser(BrowserType.chrome);
+		}else{
+			crawlerConfig.setBrowser(BrowserType.firefox);
+		}
 		//Add the plugins to:
 		//   - Retrieve requests
-
 		crawlerConfig.addPlugin(new GenerateRequestsPlugin(urls));
 		crawlerConfig.setCrawlSpecification(crawlerSpec);
 		

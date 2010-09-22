@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,6 +29,7 @@ public class RequestPanel extends JPanel {
 	final String DEFAULT_TIME = "60";
 	final String DEFAULT_UNF = "userName";
 	final String DEFAULT_PWF = "j_password";
+	final String[] BROWSERS = {"Firefox","Chrome","IE"};
 	
 	final String ttlString = "\nThese fields configure the fuzzing process. TTL is the duration of the fuzzing process. Default is 5 minutes.\n";
 	final String crawlTimeString = "\nThese fields define the crawling process and its thoroughness. A depth defines how many elements \ndeep you want to crawl (example: 5). Rather than give a depth, you can define a duration in seconds \ninstead (or both).\n";
@@ -49,6 +51,8 @@ public class RequestPanel extends JPanel {
 	final JTextField passTxt;
 	final JTextField unfTxt;
 	final JTextField pwfTxt;
+	
+	JComboBox browserBox;
 	
 	public RequestPanel(final FuzzerInfo fuzzerInfo){
 				
@@ -75,6 +79,7 @@ public class RequestPanel extends JPanel {
 		JLabel userLabel = new JLabel("Username(optional):");
 		JLabel pwfLabel = new JLabel("Password Field Name(optional):");
 		JLabel unfLabel = new JLabel("Username Field Name(optional):");
+		JLabel browserLabel = new JLabel("Browser:");
 		
 		nameTxt = new JTextField();
 		emailTxt = new JTextField();
@@ -87,6 +92,8 @@ public class RequestPanel extends JPanel {
 		unfTxt = new JTextField(DEFAULT_UNF);
 		pwfTxt = new JTextField(DEFAULT_PWF);
 		
+		browserBox = new JComboBox(BROWSERS);
+		
 		JButton submit = new JButton("Submit");
 		JButton reset = new JButton("Reset");
 		
@@ -95,7 +102,7 @@ public class RequestPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {		
 				if(!nameTxt.getText().equals("") && !emailTxt.getText().equals("") && !urlTxt.getText().equals("") ){
-					request = new FuzzRequestBean(nameTxt.getText(), urlTxt.getText(), emailTxt.getText(),Integer.parseInt(ttlTxt.getText()), Integer.parseInt(depthTxt.getText()), Integer.parseInt(timeCrawlTxt.getText()));
+					request = new FuzzRequestBean(nameTxt.getText(), urlTxt.getText(), emailTxt.getText(),Integer.parseInt(ttlTxt.getText()), Integer.parseInt(depthTxt.getText()), Integer.parseInt(timeCrawlTxt.getText()), (String)browserBox.getSelectedItem());
 						if(!(userTxt.getText().equals("") || passTxt.getText().equals(""))){
 							request.setPassword(passTxt.getText());
 							request.setUsername(userTxt.getText());
@@ -194,6 +201,8 @@ public class RequestPanel extends JPanel {
 		crawlPanel.add(depthTxt);
 		crawlPanel.add(timeCrawlLabel);
 		crawlPanel.add(timeCrawlTxt);
+		crawlPanel.add(browserLabel);
+		crawlPanel.add(browserBox);
 		
 		buttonPanel.add(submit);
 		buttonPanel.add(reset);

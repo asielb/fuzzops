@@ -15,12 +15,13 @@ public class FuzzRequestBean implements Serializable{
 	String password = "";
 	String unameField = "";
 	String passField = "";
+	String browser = "";
 	int ttl = 0;
 	UtilBean utils;
 	int depth = 0;
 	int timeCrawl = 60;
 	
-	public FuzzRequestBean(String name, String url, String email, int ttl, int depth, int timeCrawl){
+	public FuzzRequestBean(String name, String url, String email, int ttl, int depth, int timeCrawl, String browser){
 		this.name = name;
 		this.url = url;
 		this.email = email;
@@ -28,6 +29,7 @@ public class FuzzRequestBean implements Serializable{
 		//this.password = pw;
 		this.ttl = ttl;
 		this.depth = depth;
+		this.browser = browser;
 		this.timeCrawl = timeCrawl;
 	}
 
@@ -43,7 +45,9 @@ public class FuzzRequestBean implements Serializable{
 		this.unameField = unameField;
 	}
 
-
+	public String getBrowser(){
+		return browser;
+	}
 
 	public String getPassField() {
 		return passField;
