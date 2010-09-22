@@ -16,6 +16,10 @@ public class DataGenerationController {
 	
 	public DataGenerationController(){
 		iterator = 0;
+		badChars = new ArrayList();
+		for(int i = 0; i < FuzzEngine.BAD_CHAR_DEFAULT.length; i++){
+			badChars.add(FuzzEngine.BAD_CHAR_DEFAULT[i]);
+		}
 		dataGenModules = new ArrayList<Class>();
 		dataGenModules.add(BasicGenModule.class);
 	}
@@ -24,7 +28,9 @@ public class DataGenerationController {
 	public AbstractDataGenModule getNextModule(){
 		if(hasNext()){
 			try {
-			return (AbstractDataGenModule) dataGenModules.get(iterator++).newInstance();
+			AbstractDataGenModule module = (AbstractDataGenModule) dataGenModules.get(iterator++).newInstance();
+			module.badChars = badChars;
+			return module;
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {

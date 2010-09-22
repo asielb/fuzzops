@@ -18,9 +18,9 @@ public abstract class AbstractDataGenModule {
 	
 	public String scrub(String str){
 		for(int j = 0; j < FuzzEngine.BAD_CHAR_DEFAULT.length;j++)
-			str = str.replaceAll(FuzzEngine.BAD_CHAR_DEFAULT[j], "");
+			str = str.replace(FuzzEngine.BAD_CHAR_DEFAULT[j], "");
 		for(int i = 0; i < badChars.size(); i++)
-			str = str.replaceAll(String.valueOf(badChars.get(i)),"");
+			str = str.replace(String.valueOf(badChars.get(i)),"");
 		return str;
 	}
 	

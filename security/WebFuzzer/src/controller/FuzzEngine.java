@@ -86,7 +86,6 @@ public class FuzzEngine {
 	public FuzzEngine(FuzzRequestBean request) {
 		this.request = request;
 		results = new ArrayList<ResultBean>();
-		badChars = new ArrayList(); //Default bad characters need to be scrubbed in a different fashion
 		ttl = equateTime();
 		establishIO();
 		dataGenController = new DataGenerationController();
@@ -103,7 +102,6 @@ public class FuzzEngine {
 
 			currentModule = dataGenController.getNextModule();
 			currentModule.seed = request.getName();
-			currentModule.badChars = this.badChars;
 			
 			if(targets.get(0).getClass() == String.class){
 				type = Type.Application;
@@ -155,7 +153,7 @@ public class FuzzEngine {
 							// through the instances of the REPLACE_VALUE present in a request. Thus having the same effect as when testing
 							// Applications. 
 							//convertedRequest.setRequestContent(convertedRequest.getRequestContent().replace(CrawlerThread.REPLACE_VALUE, fuzzData));
-							convertedRequest.setRequestContent(convertedRequest.getRequestContent().replace(">?<", ">"+fuzzData+"<"));
+							convertedRequest.setRequestContent(stripNonValidXMLCharacters(convertedRequest.getRequestContent().replace(">?<", ">"+fuzzData+"<")));
 							System.out.println(convertedRequest.getRequestContent());
 							//for(int meth = 0; meth < soapMethods.length; meth++){
 								response = doConnection(Type.SOAP);
@@ -176,10 +174,6 @@ public class FuzzEngine {
 		}
 		request.getUtils().monitor.log("Fuzzing Complete!");
 	}
-
-
-
-
 
 	private int doConnection(Type type) {
 		//DO URL CONNECTION FOR WEB APPS
@@ -209,7 +203,7 @@ public class FuzzEngine {
 			try {
 				sendRequest();
 			} catch (SAXParseException e) {
-				badChars.add(fuzzData);
+				e.printStackTrace();
 			}
 			response = getResponse();
 			url = fuzzData;//convertedRequest.getRequestContent();
@@ -304,5 +298,25 @@ public class FuzzEngine {
 		}
 		return TimeUnit.MINUTES.toMillis(request.getTtl())/dataGenController.getModuleListSize();
 	}
+	
+	 public String stripNonValidXMLCharacters(String in) {
+		 StringBuilder out = new StringBuilder();                // Used to hold the output.
+	    	int codePoint;                                          // Used to reference the current character.
+			int i=0;
+	    	while(i<in.length()) {
+	    		//System.out.println("i=" + i);
+	    		codePoint = in.codePointAt(i);                       // This is the unicode code of the character.
+				if ((codePoint == 0x9) ||          				    // Consider testing larger ranges first to improve speed. 
+						(codePoint == 0xA) ||
+						(codePoint == 0xD) ||
+						((codePoint >= 0x20) && (codePoint <= 0xD7FF)) ||
+						((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) ||
+						((codePoint >= 0x10000) && (codePoint <= 0x10FFFF))) {
+					out.append(Character.toChars(codePoint));
+				}				
+				i+= Character.charCount(codePoint);                 // Increment with the number of code units(java chars) needed to represent a Unicode char.  
+	    	}
+	    	return out.toString();
+	    }    
 
 }
