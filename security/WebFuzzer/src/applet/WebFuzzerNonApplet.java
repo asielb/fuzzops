@@ -1,18 +1,21 @@
 package applet;
 
-import javax.swing.JApplet;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 
-@SuppressWarnings("serial")
-public class WebFuzzerAppletMain extends JApplet {
+public class WebFuzzerNonApplet extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	FuzzerInfo fuzzerInfo = new FuzzerInfo("127.0.0.1","9991");
 	
+	public WebFuzzerNonApplet(){
+		init();
+	}
 	
 	public void init() {
 		try{
@@ -49,6 +52,7 @@ public class WebFuzzerAppletMain extends JApplet {
 					//Main pane info
 					add(tabbedPane);
 					setSize(850,550);
+					setVisible(true);
 					
 				}
 				
@@ -57,5 +61,9 @@ public class WebFuzzerAppletMain extends JApplet {
 			e.printStackTrace();
 			System.out.println("FAILED");
 		}
+	}
+	
+	public static void main(String[] args){
+		new WebFuzzerNonApplet();
 	}
 }
