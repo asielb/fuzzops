@@ -92,9 +92,9 @@ public class FuzzEngine {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void fuzz(ArrayList targs){
+	public void fuzz(ArrayList targets){ //LIST OF URLS TO FUZZ
 		request.getUtils().monitor.log("Fuzzing...");
-		ArrayList targets = targs;
+		//ArrayList targets = targs;
 
 		while(dataGenController.hasNext()){
 

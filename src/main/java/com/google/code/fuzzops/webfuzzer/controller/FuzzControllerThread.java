@@ -92,6 +92,7 @@ public class FuzzControllerThread implements Runnable{
 					controller.handleRequest(commBean.getCommand(), commBean.getParams(), utils);
 				}
 			} catch (IOException e1) {
+				System.out.println(e1.getMessage());
 				e1.printStackTrace();
 			} catch (ClassNotFoundException e1) {				
 				System.out.println("ERROR WITH COMM BEAN");
@@ -99,7 +100,8 @@ public class FuzzControllerThread implements Runnable{
 			}
 		}
 		} catch(Exception e){
-		
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

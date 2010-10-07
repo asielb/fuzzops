@@ -16,12 +16,14 @@ public class FuzzRequestBean implements Serializable{
 	String unameField = "";
 	String passField = "";
 	String browser = "";
+	String targetDomain = "";
 	int ttl = 0;
 	UtilBean utils;
 	int depth = 0;
 	int timeCrawl = 60;
 	
-	public FuzzRequestBean(String name, String url, String email, int ttl, int depth, int timeCrawl, String browser){
+	public FuzzRequestBean(String name, String url, String email, int ttl,
+			int depth, int timeCrawl, String browser, String targetDomain) {
 		this.name = name;
 		this.url = url;
 		this.email = email;
@@ -31,15 +33,12 @@ public class FuzzRequestBean implements Serializable{
 		this.depth = depth;
 		this.browser = browser;
 		this.timeCrawl = timeCrawl;
-	}
-
-	
+		this.targetDomain = targetDomain;
+	}	
 	
 	public String getUnameField() {
 		return unameField;
 	}
-
-
 
 	public void setUnameField(String unameField) {
 		this.unameField = unameField;
@@ -53,19 +52,13 @@ public class FuzzRequestBean implements Serializable{
 		return passField;
 	}
 
-
-
 	public void setPassField(String passField) {
 		this.passField = passField;
 	}
 
-
-
 	public void setTimeCrawl(int timeCrawl) {
 		this.timeCrawl = timeCrawl;
 	}
-
-
 
 	public String getOutputFile(){
 		return utils.getOutputFile().getAbsolutePath()
@@ -108,9 +101,15 @@ public class FuzzRequestBean implements Serializable{
 
 	@Override
 	public String toString() {
-		return "FuzzRequestBean [email=" + email + ", name=" + name
-				+ ", password=" + password + ", ttl=" + ttl + ", url=" + url
-				+ ", username=" + username + "]";
+		return "FuzzRequestBean ["
+				+ "email=" + email 
+				+ ", name=" + name
+				+ ", password=" + password 
+				+ ", ttl=" + ttl 
+				+ ", url=" + url
+				+ ", username=" + username
+				+ ", domain="+ targetDomain
+				+ "]";
 	}
 
 	public void setUtils(UtilBean utils) {
@@ -149,6 +148,14 @@ public class FuzzRequestBean implements Serializable{
 		this.timeCrawl = timeCrawl;
 	}
 
+	public String getTargetDomain() {
+		return this.targetDomain;
+	}
+	
+	public void setTargetDomain(String newTarget) {
+		targetDomain = newTarget;
+	}
+	
 	public UtilBean getUtils() {
 		return utils;
 	}

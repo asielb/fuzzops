@@ -39,7 +39,7 @@ public class FuzzEngine {
 	int size;
 	DataGenerationController dataGenController;
 	long moduleTime;
-	AbstractDataGenModule currentModule;
+	AbstractDataGenModule dataModule;
 	Type type;
 
 	//Fuzzing process HTTP request data
@@ -77,15 +77,15 @@ public class FuzzEngine {
 	@SuppressWarnings("unchecked")
 	public void fuzz(ArrayList targs){
 		request.getUtils().monitor.log("Fuzzing...");
-		ArrayList targets = targs;
+		ArrayList targets = targs; //
 
 		while(dataGenController.hasNext()){
 
 			moduleTime = System.currentTimeMillis() + equateTimeForModules();
 
-			currentModule = dataGenController.getNextModule();
-			currentModule.seed = request.getName();
-			currentModule.badChars = this.badChars;
+			dataModule = dataGenController.getNextModule();
+			dataModule.seed = request.getName();
+			dataModule.badChars = this.badChars;
 			
 			if(targets.get(0).getClass() == String.class){
 				type = Type.Application;
@@ -94,7 +94,7 @@ public class FuzzEngine {
 			}//Check for REST
 			
 			while(System.currentTimeMillis() < moduleTime){
-				fuzzData = currentModule.generate(response);
+				fuzzData = dataModule.generate(response);
 
 				for(int targ = 0; targ < targets.size(); targ++){
 
@@ -109,12 +109,12 @@ public class FuzzEngine {
 							current = (HttpURLConnection)fuzzUrl.openConnection();
 
 							//Go through all the POST,GET,OPTIONS, etc methods for each request
-							for(int meth = 0; meth < methods.length; meth++){
+							for( String m : methods){
 								try{
-									current.setRequestMethod(methods[meth]);
+									current.setRequestMethod(m);
 								} catch (ProtocolException pe){
 									current.disconnect();
-									current.setRequestMethod(methods[meth]);
+									current.setRequestMethod(m);
 								}
 								response = doConnection(Type.Application);
 							}

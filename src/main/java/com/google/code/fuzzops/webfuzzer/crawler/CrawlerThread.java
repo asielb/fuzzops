@@ -6,6 +6,7 @@ import java.util.HashSet;
 import javax.naming.ConfigurationException;
 import com.google.code.fuzzops.webfuzzer.applet.FuzzRequestBean;
 import com.crawljax.browser.EmbeddedBrowser.BrowserType; 
+import com.crawljax.condition.UrlCondition;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
@@ -77,16 +78,23 @@ public class CrawlerThread implements Runnable{
 		crawlerSpec.dontClick("a").withText("Logout");
 		//TODO: blacklist/whitelist. Same Origin
 		
+		//crawlerSpec.dontClick("a").underXPath("//A[contains(@HREF,'10.118.195.93')]");
+		
 		//Only set depth if user does so. If none supplied, it will go for a loooong time.
 		if(request.getDepth() != 0){
 			crawlerSpec.setDepth(request.getDepth());
 		}
 		
-		//Only set time if user does so. If none suppolied, it will go until it has completely crawled the site.
+		//Only set time if user does so. If none supplied, it will go until it has completely crawled the site.
 		if(request.getTimeCrawl() != 0){
 			crawlerSpec.setMaximumRuntime(request.getTimeCrawl());
 		}
 		
+		//limit crawl to specified site
+		if(!request.getTargetDomain().isEmpty()) {
+			crawlerSpec.addCrawlCondition("Only crawl "+request.getTargetDomain(), new UrlCondition(request.getTargetDomain()));
+		}
+
 		//Compile the Spec and Input into the Config
 		if(!(request.getUsername().equals("") && request.getPassword().equals(""))){
 			crawlerConfig.addPlugin(new LoginPlugin(request.getUsername(), request.getPassword()));

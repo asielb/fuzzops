@@ -45,15 +45,13 @@ public class ConfigPanel extends JPanel {
 		save.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent arg0) {
-				if(!hostInput.getText().equals(fuzzerInfo.getHost()) && !portInput.getText().equals(fuzzerInfo.getPort())){
-					int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to save?");
-					if(choice == JOptionPane.OK_OPTION){
-						fuzzerInfo.setHost(hostInput.getText());
-						fuzzerInfo.setPort(portInput.getText());
-					} else {
-						hostInput.setText(fuzzerInfo.getHost());
-						portInput.setText(fuzzerInfo.getPort());
-					}
+				int choice = JOptionPane.showConfirmDialog(null, "Apply changes?");
+				if(choice == JOptionPane.OK_OPTION){
+					fuzzerInfo.setHost(hostInput.getText());
+					fuzzerInfo.setPort(portInput.getText());
+				} else {
+					hostInput.setText(fuzzerInfo.getHost());
+					portInput.setText(fuzzerInfo.getPort());
 				}
 			}
 		});

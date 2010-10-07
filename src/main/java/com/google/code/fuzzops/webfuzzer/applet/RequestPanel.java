@@ -51,6 +51,7 @@ public class RequestPanel extends JPanel {
 	final JTextField passTxt;
 	final JTextField unfTxt;
 	final JTextField pwfTxt;
+	final JTextField domainToCrawl;
 	
 	JComboBox browserBox;
 	
@@ -79,11 +80,12 @@ public class RequestPanel extends JPanel {
 		JLabel userLabel = new JLabel("Username(optional):");
 		JLabel pwfLabel = new JLabel("Password Field Name(optional):");
 		JLabel unfLabel = new JLabel("Username Field Name(optional):");
+		JLabel domainLabel = new JLabel("Domain or Website to crawl");
 		JLabel browserLabel = new JLabel("Browser:");
 		
-		nameTxt = new JTextField();
-		emailTxt = new JTextField();
-		urlTxt = new JTextField();
+		nameTxt = new JTextField("yourname");
+		emailTxt = new JTextField("your@email.com");
+		urlTxt = new JTextField("http://10.109.43.239:8080/stack-pet-store-ui/");
 		ttlTxt = new JTextField(DEFAULT_TTL);
 		depthTxt = new JTextField(DEFAULT_DEPTH);
 		timeCrawlTxt = new JTextField(DEFAULT_TIME);
@@ -91,7 +93,7 @@ public class RequestPanel extends JPanel {
 		userTxt = new JTextField();
 		unfTxt = new JTextField(DEFAULT_UNF);
 		pwfTxt = new JTextField(DEFAULT_PWF);
-		
+		domainToCrawl = new JTextField("enter your site(ex: stack-pet-store-ui)");
 		browserBox = new JComboBox(BROWSERS);
 		
 		JButton submit = new JButton("Submit");
@@ -99,32 +101,48 @@ public class RequestPanel extends JPanel {
 		
 		submit.addActionListener(new ActionListener(){
 
-			public void actionPerformed(ActionEvent arg0) {		
-				if(!nameTxt.getText().equals("") && !emailTxt.getText().equals("") && !urlTxt.getText().equals("") ){
-					request = new FuzzRequestBean(nameTxt.getText(), urlTxt.getText(), emailTxt.getText(),Integer.parseInt(ttlTxt.getText()), Integer.parseInt(depthTxt.getText()), Integer.parseInt(timeCrawlTxt.getText()), (String)browserBox.getSelectedItem());
-						if(!(userTxt.getText().equals("") || passTxt.getText().equals(""))){
-							request.setPassword(passTxt.getText());
-							request.setUsername(userTxt.getText());
-							request.setPassField(pwfTxt.getText());
-							request.setUnameField(unfTxt.getText());
-						}
+			public void actionPerformed(ActionEvent arg0) {
+				if (!nameTxt.getText().equals("")
+						&& !emailTxt.getText().equals("")
+						&& !urlTxt.getText().equals("")) {
+					request = new FuzzRequestBean(nameTxt.getText(), 
+							urlTxt.getText(), emailTxt.getText(), 
+							Integer.parseInt(ttlTxt.getText()), 
+							Integer.parseInt(depthTxt.getText()), 
+							Integer.parseInt(timeCrawlTxt.getText()),
+							(String) browserBox.getSelectedItem(),
+							domainToCrawl.getText());
+					if (!(userTxt.getText().equals("") || passTxt.getText()
+							.equals(""))) {
+						request.setPassword(passTxt.getText());
+						request.setUsername(userTxt.getText());
+						request.setPassField(pwfTxt.getText());
+						request.setUnameField(unfTxt.getText());
+					}
 					try {
-						conn = new Socket(fuzzerInfo.getHost(), fuzzerInfo.getPortAsInt());
+						String host = fuzzerInfo.getHost();
+						int port = fuzzerInfo.getPortAsInt();
+						conn = new Socket(host, port);
 						oStream = new ObjectOutputStream(conn.getOutputStream());
 						iStream = new ObjectInputStream(conn.getInputStream());
-						if(sendRequest(request)){
+						if (sendRequest(request)) {
 							JOptionPane.showMessageDialog(null, "Success!");
 							clearValues();
 						} else {
 							JOptionPane.showMessageDialog(null, "Failed!");
 						}
-					} catch (UnknownHostException e) {
-						System.out.println("Error: Could no reach fuzzer! Check configurations.");
-					} catch (IOException e) {
+					} catch (UnknownHostException e1) {
+						System.out
+								.println("Error: Could no reach fuzzer! Check configurations.");
+						e1.printStackTrace();
+					} catch (IOException e2) {
 						System.out.println("Error: I/O Exception!");
+						e2.printStackTrace();
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Error: Name, Email and URL are all required fields!");
+					JOptionPane
+							.showMessageDialog(null,
+									"Error: Name, Email and URL are all required fields!");
 				}
 			}
 
@@ -199,6 +217,8 @@ public class RequestPanel extends JPanel {
 		crawlPanel.add(depthTxt);
 		crawlPanel.add(timeCrawlLabel);
 		crawlPanel.add(timeCrawlTxt);
+		crawlPanel.add(domainLabel);
+		crawlPanel.add(domainToCrawl);
 		crawlPanel.add(browserLabel);
 		crawlPanel.add(browserBox);
 		
